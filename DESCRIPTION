@@ -24,5 +24,6 @@ Imports:
     ggplot2,
     shiny,
     stringr,
-    bs4Dash
+    bs4Dash,
+    readxl
 URL: https://mjfrigaard.github.io/segapp/
