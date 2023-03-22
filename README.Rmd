@@ -22,3 +22,7 @@ knitr::opts_chunk$set(
 
 ## Installation
 
+```r
+remotes::install_github('mjfrigaard/segapp')
+library(segapp)
+```
