@@ -23,5 +23,6 @@ VignetteBuilder: knitr
 Imports: 
     ggplot2,
     shiny,
-    stringr
+    stringr,
+    bs4Dash
 URL: https://mjfrigaard.github.io/segapp/
