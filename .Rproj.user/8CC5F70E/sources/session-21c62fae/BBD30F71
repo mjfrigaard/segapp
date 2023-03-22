@@ -1,0 +1,24 @@
+{
+    "id": "BBD30F71",
+    "path": "~/projects/segRedoux/segapp/R/mod_import_data.R",
+    "project_path": "R/mod_import_data.R",
+    "type": "r_source",
+    "hash": "2916008261",
+    "contents": "",
+    "dirty": false,
+    "created": 1679469829688.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1679469831,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1679469831956,
+    "read_only": false,
+    "read_only_alternatives": []
+}
