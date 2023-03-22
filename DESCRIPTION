@@ -25,5 +25,6 @@ Imports:
     shiny,
     stringr,
     bs4Dash,
-    readxl
+    readxl,
+    segtools
 URL: https://mjfrigaard.github.io/segapp/

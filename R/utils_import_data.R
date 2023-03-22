@@ -29,9 +29,6 @@ import_flat_file <- function(path) {
 #' @return imported data
 #' @export import_data
 #'
-#' @importFrom tools file_ext
-#' @importFrom readxl read_excel
-#' @importFrom tibble as_tibble
 #'
 import_data <- function(path, sheet = NULL) {
   ext <- tools::file_ext(path)
