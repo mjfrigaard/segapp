@@ -15,32 +15,6 @@ mod_import_data_ui <- function(id) {
   ns <- NS(id)
   shiny::tagList(
     bs4Dash::box(
-      title = "Instructions",
-      status = "secondary",
-      width = 12,
-      collapsible = TRUE,
-      collapsed = TRUE,
-      solidHeader = TRUE,
-      shiny::fluidRow(
-        shiny::column(
-          width = 12,
-          shiny::tags$p(
-            "Upload your data in a comma separated values (",
-            shiny::tags$code(".csv"), ") file by clicking on the 'Browse' button below. Your ", shiny::tags$code(".csv"), " file should contain only two columns:"),
-          # BGM text ----
-          shiny::tags$p("-    Blood glucose monitor (", shiny::tags$strong("BGM"), ") readings should be in the leftmost column under the heading, '", shiny::tags$code("BGM"), "'. These are the meter readings or point-of-care readings."),
-          # REF text ----
-          shiny::tags$p("-    Reference values (", shiny::tags$strong("REF"), ") should be in the next column under the label, '", shiny::tags$code("REF"), "'. ", shiny::tags$strong("REF"), "values might come from simultaneously obtained plasma specimens run on a laboratory analyzer such as the YSI Life Sciences 2300 Stat Plus Glucose Lactate Analyzer."),
-          # concentration text ----
-          shiny::tags$p("All glucose concentrations should be in mg/dL and rounded to the nearest integer. If you have any questions about how your ", shiny::tags$code(".csv"), " data file should look before uploading it, please download the sample data set we have provided."),
-          # concentration reminder text ----
-          shiny::tags$em(
-            shiny::tags$strong("Again, all glucose concentrations should be in mg/dL and rounded to the nearest integer.")
-          )
-        )
-      )
-    ),
-    bs4Dash::box(
       title = "Upload", width = 12,
       shiny::fluidRow(
         shiny::column(
@@ -110,6 +84,8 @@ mod_import_data_ui <- function(id) {
 #' @importFrom tools file_ext
 #' @importFrom stringr str_detect
 #' @importFrom readxl excel_sheets
+#' @importFrom reactable colDef
+#' @importFrom sparkline sparkline
 mod_import_data_server <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -181,11 +157,12 @@ mod_import_data_server <- function(id) {
         reactable::reactable(
           data = imported_data(),
           defaultPageSize = 5,
-          resizable = TRUE,
-          highlight = TRUE,
-          compact = TRUE,
-          wrap = FALSE,
-          bordered = TRUE
+          bordered = TRUE,
+          defaultColDef = reactable::colDef(footer = function(values) {
+            if (!is.numeric(values)) return()
+            sparkline::sparkline(values, type = "box",
+              width = 300, height = 80)
+          })
         )
       )
     }) |>

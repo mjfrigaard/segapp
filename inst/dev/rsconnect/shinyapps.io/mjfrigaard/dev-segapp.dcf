@@ -1,0 +1,13 @@
+name: dev-segapp
+title: dev-segapp
+username:
+account: mjfrigaard
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8658862
+bundleId: 7000435
+url: https://mjfrigaard.shinyapps.io/dev-segapp/
+when: 1679618523.21033
+lastSyncTime: 1679618523.21034
+asMultiple: FALSE
+asStatic: FALSE

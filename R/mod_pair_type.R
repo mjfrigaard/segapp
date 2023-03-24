@@ -17,13 +17,17 @@ mod_pair_type_ui <- function(id) {
         # BGM text ----
         shiny::tags$p(
           shiny::tags$strong(
-            shiny::tags$code("BGM")), " = Blood Glucose Monitor"),
+            shiny::tags$code("BGM")
+          ), " = Blood Glucose Monitor"
+        ),
         # REF text ----
         shiny::tags$p(
           shiny::tags$strong(
-            shiny::tags$code("REF")), " = Reference"),
-        # Table description text ----
-        shiny::tags$p("This contains the number of ", shiny::tags$code("BGM"), "values that were 1) less than the ", shiny::tags$code("REF"), "values, 2) equal to the ", shiny::tags$code("REF"), "values, and 3) greater than the ", shiny::tags$code("REF"),  "values. Note that ", shiny::tags$code("REF"), "values >600 mg/dL will not be plotted on the SEG.")),
+            shiny::tags$code("REF")
+          ), " = Reference"
+        ),
+        shiny::uiOutput(ns("text_pairs"))
+      ),
       shiny::column(
         width = 6,
         reactable::reactableOutput(ns("display_pairs"))
@@ -43,7 +47,7 @@ mod_pair_type_ui <- function(id) {
 #' @export mod_pair_type_server
 #'
 #' @importFrom shiny NS moduleServer
-#' @importFrom shiny reactive bindEvent validate
+#' @importFrom shiny reactive bindEvent validate need
 #' @importFrom segtools seg_pair_type_tbl
 mod_pair_type_server <- function(id, module_data) {
   shiny::moduleServer(id, function(input, output, session) {
@@ -52,7 +56,7 @@ mod_pair_type_server <- function(id, module_data) {
       shiny::validate(
         shiny::need(
           expr = module_data$imported_data(),
-          message = "please import data"
+          message = "import a .csv file"
         )
       )
       imported <- module_data$imported_data()
@@ -62,10 +66,22 @@ mod_pair_type_server <- function(id, module_data) {
     # use observe for the side-effect here
     shiny::observe({
       output$display_pairs <- reactable::renderReactable({
+        shiny::validate(
+          shiny::need(imported(), "import a .csv file")
+        )
         pairs_tbl <- segtools::seg_pair_type_tbl(imported())
         reactable::reactable(
           data = pairs_tbl
         )
+      })
+    }) |>
+      # bind this to import
+      shiny::bindEvent(imported())
+
+    shiny::observe({
+      output$text_pairs <- shiny::renderText({
+        # Table description text ----
+        HTML(paste0(shiny::tags$p("This contains the number of ", shiny::tags$code("BGM"), "values that were 1) less than the ", shiny::tags$code("REF"), "values, 2) equal to the ", shiny::tags$code("REF"), "values, and 3) greater than the ", shiny::tags$code("REF"), "values. Note that ", shiny::tags$code("REF"), "values >600 mg/dL will not be plotted on the SEG.")))
       })
     }) |>
       # bind this to import

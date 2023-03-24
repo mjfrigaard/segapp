@@ -1,15 +1,15 @@
 {
     "dialog-state": {
-        "query": "myPkgApp",
+        "query": "test_data",
         "path": "",
         "regex": false,
         "caseSensitive": true,
-        "wholeWord": false,
+        "wholeWord": true,
         "filePatterns": [],
-        "useGitGrep": false,
+        "useGitGrep": true,
         "excludeGitIgnore": true,
         "excludeFilePatterns": [],
-        "resultsCount": 21,
+        "resultsCount": 5,
         "errorCount": 0,
         "replaceErrors": "",
         "projectRelative": true

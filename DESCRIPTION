@@ -23,6 +23,8 @@ VignetteBuilder: knitr
 Imports: 
     ggplot2,
     shiny,
+    reactable,
+    sparkline,
     stringr,
     bs4Dash,
     readxl,

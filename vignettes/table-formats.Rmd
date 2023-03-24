@@ -1,0 +1,269 @@
+---
+title: "Table Formats"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{Table Formats}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  
+always_allow_html: true
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Packages 
+
+```{r pkgs, message=FALSE, warning=FALSE}
+library(segapp)
+library(segtools)
+library(reactable)
+library(shiny)
+library(vroom)
+library(dplyr)
+```
+
+In the previous application, the tables were formatted using the [`DT` package](https://rstudio.github.io/DT/). In order to render with the color scales, an [`ID` column was included](https://github.com/quesgen/seg-shiny-1-3-3/blob/4582582ee56547e4f03c4a683c8958f74c9f2f07/App/App.R#LL762C9-L762C9) (to [match with corresponding color codes](https://github.com/quesgen/seg-shiny-1-3-3/blob/4582582ee56547e4f03c4a683c8958f74c9f2f07/App/App.R#L807)).
+
+```{r risk_grade_tbl-formatStyle, eval=FALSE}
+# ===== RISK GRADE TABLE ======
+# select numerical reference
+DT::formatStyle(
+  "ID",
+  # column
+  target = "row",
+  # reference rows
+  backgroundColor =
+    DT::styleEqual(
+      levels = # five levels/labels
+        c(1, 2, 3, 4, 5),
+      values = c(
+        "limegreen",
+        "greenyellow",
+        "yellow",
+        "orange",
+        "red"
+      )
+    )
+)
+```
+
+
+```{r vand_comp_risk_grade, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics(path = "../man/figures/vand_comp_risk_grade.png")
+```
+
+```{r risk_level_tbl-formatStyle, eval=FALSE}
+# ===== RISK LEVEL (CATEGORY) TABLE ======
+        # select numerical reference
+        DT::formatStyle("SEG Risk Level",
+          target = "row",
+          backgroundColor = DT::styleEqual(
+            levels = # eight levels/labels
+              c(
+                0, 1, 2, 3,
+                4, 5, 6, 7
+              ),
+            values = c(
+              "#00EE00", "#ADFF2F", "#FFFF00",
+              "#FFD700", "#FFA500", "#EE7600",
+              "#FF4500", "#FF0000"
+            )
+          )
+        )
+```
+
+```{r vand_comp_risk_level, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics(path = "../man/figures/vand_comp_risk_level.png")
+```
+
+
+```{r , eval=FALSE, include=FALSE}
+reactable::reactable(risk_grade_tbl,
+  columns = list(
+    ID = reactable::colDef(
+      style = function(value) {
+        if (value == 1) {
+          color <- "limegreen"
+        } else if (value == 2) {
+          color <- "greenyellow"
+        } else if (value == 3) {
+          color <- "yellow"
+        } else if (value == 4) {
+          color <- "orange"
+        } else {
+          color <- "red"
+        }
+        list(background = color, fontWeight = "bold")
+      }
+    )
+  )
+)
+```
+
+## Load test data 
+
+Below we load the `VanderbiltComplete.csv` test dataset (with only `BGM` and `REF` columns)
+
+```{r code-risk_grade_tbl, eval=TRUE}
+test_data <- vroom::vroom(
+  system.file("extdata", "VanderbiltComplete.csv",
+    package = "segtools"
+  ),
+  delim = ",",
+  show_col_types = FALSE
+)
+dplyr::glimpse(test_data)
+```
+
+## Risk grade table
+
+
+The risk grade table requires two functions from `segtools`: 
+
+1. `seg_risk_vars()`: computes the risk columns
+
+```{r risk_vars_tbl-show}
+risk_vars_tbl <- segtools::seg_risk_vars(df = test_data)
+dplyr::glimpse(risk_vars_tbl)
+```
+
+
+2. `seg_risk_grade_tbl()`: creates the risk grades
+
+```{r eval=FALSE}
+risk_grade_tbl <- segtools::seg_risk_grade_tbl(risk_vars_tbl)
+risk_grade_tbl
+```
+
+```{r kable-risk_grade_tbl, echo=FALSE}
+risk_vars_tbl <- segtools::seg_risk_vars(df = test_data)
+risk_grade_tbl <- segtools::seg_risk_grade_tbl(risk_vars_tbl)
+knitr::kable(risk_grade_tbl)
+```
+
+### Color formatting with `reactable`
+
+The risk grade table has five colors
+
+```{r risk_grade_colors} 
+segapp::risk_grade_colors
+```
+
+which we can apply to the ID column with the `rowStyle` argument:
+
+```{r risk_grade_tbl-rowStyle}
+reactable::reactable(
+  dplyr::select(.data = risk_grade_tbl, -ID), 
+  compact = TRUE,
+  rowStyle = function(index) {
+    if (risk_grade_tbl[index, "Risk Grade"] == "A") {
+      list(background = "#33CC33",
+        fontWeight = "bold")
+    } else if (risk_grade_tbl[index, "Risk Grade"] == "B") {
+      list(
+        background = "#99FF33",
+        fontWeight = "bold"
+      )
+    } else if (risk_grade_tbl[index, "Risk Grade"] == "C") {
+      list(
+        background = "#FFFF00",
+        fontWeight = "bold"
+      )
+    } else if (risk_grade_tbl[index, "Risk Grade"] == "D") {
+      list(
+        background = "#FF9900",
+        fontWeight = "bold"
+      )
+    } else if (risk_grade_tbl[index, "Risk Grade"] == "E") {
+      list(
+        background = "#FF0000",
+        fontWeight = "bold"
+      )
+    }
+  }
+)
+```
+
+## Risk category (level) table
+
+The risk category (level) table has eight colors
+
+```{r risk_category_colors}
+segapp::risk_category_colors
+```
+
+which we can apply to the ID column with the `rowStyle` argument:
+
+```{r show-risk_cat_tbl, eval=FALSE}
+risk_cat_tbl <- segtools::seg_risk_cat_tbl(risk_vars = risk_vars_tbl)
+risk_cat_tbl
+```
+
+```{r kable-risk_cat_tbl, echo=FALSE}
+risk_cat_tbl <- segtools::seg_risk_cat_tbl(risk_vars = risk_vars_tbl)
+# knitr::kable(
+#   risk_cat_tbl)
+risk_cat_tbl
+```
+
+```{r}
+risk_category_colors
+```
+
+
+
+```{r risk_cat_tbl-rowStyle, eval=TRUE}
+reactable::reactable(data = risk_cat_tbl, 
+  compact = TRUE,
+  rowStyle = function(index) {
+    if (risk_cat_tbl[index, "SEG Risk Category"] == 'None') {
+      list(background = "#00EE00",
+        fontWeight = "bold")
+    } else if (risk_cat_tbl[index, "SEG Risk Category"] == 'Slight, Lower') {
+      list(
+        background = "#ADFF2F",
+        fontWeight = "bold"
+      )
+    } else if (risk_cat_tbl[index, "SEG Risk Category"] == 'Slight, Higher') {
+      list(
+        background = "#FFFF00",
+        fontWeight = "bold"
+      )
+    } else if (risk_cat_tbl[index, "SEG Risk Category"] == 'Moderate, Lower') {
+      list(
+        background = "#FFD700",
+        fontWeight = "bold"
+      )
+    } else if (risk_cat_tbl[index, "SEG Risk Category"] == 'Moderate, Higher') {
+      list(
+        background = "#FFA500",
+        fontWeight = "bold"
+      )
+    } else if (risk_cat_tbl[index, "SEG Risk Category"] == 'Severe, Lower') {
+      list(
+        background = "#EE7600",
+        fontWeight = "bold"
+      )
+   } else if (risk_cat_tbl[index, "SEG Risk Category"] == 'Severe, Upper') {
+      list(
+        background = "#FF4500",
+        fontWeight = "bold"
+      )
+   } else {
+      list(
+        background = "#FF0000",
+        fontWeight = "bold"
+      )
+    }
+  }
+)
+```
+

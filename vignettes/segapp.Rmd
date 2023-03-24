@@ -1,19 +1,47 @@
 ---
-title: "segapp"
+title: "SEG shiny app (version 2.0)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{segapp}
+  %\VignetteIndexEntry{SEG shiny app (version 2.0)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(repos = "https://cran.rstudio.com/")
 ```
 
-```{r setup}
+`segapp` is designed to work with [`segtools`](https://mjfrigaard.github.io/segtools/index.html), the utility package for the Surveillance Error Grid calculations and data manipulations.
+
+```{r pkgs, message=FALSE, warning=FALSE}
+# install.packages('remotes')
+# remotes::install_github("mjfrigaard/segtools", force = TRUE, quiet = TRUE)
+library(segtools)
 library(segapp)
 ```
+
+## How it works
+
+`segapp` is a [shiny application built as an R package](https://mastering-shiny.org/scaling-packaging.html), which means it's self-contained and contains, ["*reusable R functions, the documentation that describes how to use them, and sample data.*"](https://r-pkgs.org/).
+
+## Running the application 
+
+To run the development version of the application, install and load segapp and use `run_dev()`:
+
+```r
+install.packages('remotes')
+# ensure current version
+remotes::install_github("mjfrigaard/segapp", force = TRUE, quiet = TRUE)
+library(segapp)
+run_dev()
+```
+
+The production version of the application can be deployed by running `run_app()`, which is contained in the `app.R` file.
+
+
+
+
