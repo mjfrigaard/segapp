@@ -11,7 +11,30 @@ Surveillance Program](https://www.diabetestechnology.org/seg/)
 
 ## Installation
 
+`segapp` is designed to work with
+[`segtools`](https://mjfrigaard.github.io/segtools/index.html), the
+utility package for the Surveillance Error Grid calculations and data
+manipulations.
+
+To run the development version of the application, install and load
+`segtools` and `segapp`
+
 ``` r
-remotes::install_github('mjfrigaard/segapp')
-library(segapp)
+install.packages('remotes')
+# ensure current versions
+remotes::install_github("mjfrigaard/segtools", force = TRUE, quiet = TRUE)
+remotes::install_github("mjfrigaard/segapp", force = TRUE, quiet = TRUE)
 ```
+
+Then load the packages and use the `run_dev()` function
+
+``` r
+library(segtools)
+library(segapp)
+# use run_dev()
+segapp::run_dev()
+```
+
+A development version of the application is available here:
+
+<https://mjfrigaard.shinyapps.io/dev-segapp/>

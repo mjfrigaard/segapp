@@ -1,8 +1,8 @@
 ---
-title: "SEG shiny app (version 2.0)"
+title: "Getting started with SEG shiny app (version 2.0)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SEG shiny app (version 2.0)}
+  %\VignetteIndexEntry{Getting started with SEG shiny app (version 2.0)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -40,7 +40,7 @@ library(segapp)
 run_dev()
 ```
 
-The production version of the application can be deployed by running `run_app()`, which is contained in the `app.R` file.
+T
 
 
 
